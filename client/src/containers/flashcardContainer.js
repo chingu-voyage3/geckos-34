@@ -7,25 +7,7 @@ import _ from 'lodash';
 
 var email = "tony@mrbrackins.com";
 var password = "P@ssword1";
-const data = [
-  {
-  title: 'Flashcard 1',
-  desc: 'Drumstick jowl filet mignon turducken turkey pork loin, beef ribs spare ribs andouille bresaola meatball short loin kevin flank cupim. Tongue prosciutto drumstick fatback jerky tenderloin kielbasa pork chop shoulder bacon.'
-},
 
-{
-title: 'Flashcard 2',
-desc: 'Drumstick jowl filet mignon turducken turkey pork loin, beef ribs spare ribs andouille bresaola meatball short loin kevin flank cupim. Tongue prosciutto drumstick fatback jerky tenderloin kielbasa pork chop shoulder bacon.'
-},
-
-{
-title: 'Flashcard 3',
-desc: 'Drumstick jowl filet mignon turducken turkey pork loin, beef ribs spare ribs andouille bresaola meatball short loin kevin flank cupim. Tongue prosciutto drumstick fatback jerky tenderloin kielbasa pork chop shoulder bacon.'
-},
-
-
-
-]
 
 class flashcardContainer extends Component {
 
@@ -33,10 +15,7 @@ class flashcardContainer extends Component {
     super(props);
     this.state = {
       currentUser: false,
-      data: [{
-        title: 'title',
-        desc: 'desc'
-      }]
+      data: []
 
       };
 

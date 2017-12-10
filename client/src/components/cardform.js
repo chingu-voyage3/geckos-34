@@ -51,7 +51,7 @@ class cardform extends React.Component {
           <input type="text" value={this.state.value} onChange={this.handleDescChange.bind(this)} />
         </label>
 
-        <button  value="Submit" onClick={this.handleSubmit.bind(this)} />
+        <button  onClick={this.handleSubmit.bind(this)} >Add Card</button>
       </form>
     );
   }
