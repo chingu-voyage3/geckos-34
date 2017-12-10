@@ -49,23 +49,44 @@ class flashcardContainer extends Component {
     firebase.auth().signInWithEmailAndPassword(email, password)
   .then((user) => {
     console.log(user)
-    this.setState({currentUser: user})
+
     console.log(this.state)
 
+    firebase.database().ref(`/users/${user.uid}/cards`)
+  .on('value', (snapshot) => {
+    var results = snapshot.val();
+
+    _.map(results, (val, uid) => {
+      console.log(val)
+
+      var newArray = this.state.data.slice();
+        newArray.push({ title: val.title, desc: val.desc});
+        this.setState({data:newArray})
+
+    //   this.setState({
+    //   data: this.state.data.concat([{ title: val.title, desc: val.desc}])
+    // })
+
+
+
+
+
+            // return { ...val, uid }; // { shift: 'Monday', name: 'Tony', id: '12321'};
+        })
+    // this.setState({data: results})
+    console.log('theresults')
+    console.log(results[0])
   })
 
-  }
+  })
+}
 
   componentDidMount(){
     console.log('state current user')
     console.log(this.state.currentUser)
 
 
-    firebase.database().ref(`/users/${this.state.currentUser.uid}/cards`)
-  .once('value', (snapshot) => {
-    var results = snapshot.val();
-    this.setState({data: results})
-  })
+
 
   console.log(this.state.data)
 
@@ -90,16 +111,20 @@ var thedata = [{
 }]
 
 firebase.database().ref(`/users/${this.state.currentUser.uid}/cards`)
-            .once('value', (snapshot) => {
-                var payload = snapshot.val()
+            .on('value', (snapshot) => {
+                var payload = snapshot
                 console.log(payload)
 
-_.map(payload, (val, uid) => {
+_.map(payload.val(), (val, uid) => {
   console.log(val)
 
-  this.setState({
-  data: this.state.data.concat([{ title: val.title, desc: val.desc}])
-})
+  var newArray = this.state.data.slice();
+    newArray.push({ title: val.title, desc: val.desc});
+    this.setState({data:newArray})
+
+//   this.setState({
+//   data: this.state.data.concat([{ title: val.title, desc: val.desc}])
+// })
 
 
 
