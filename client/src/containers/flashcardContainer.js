@@ -1,31 +1,12 @@
 import React, { Component } from 'react';
 import '../App.css';
 import Flashcard from '../components/flashcard';
-import firebase from 'firebase';
-
-// Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyC7V5veRLtF7F2RbVYGEKN3_3CDzdzlsP0",
-    authDomain: "voyageflashcards.firebaseapp.com",
-    databaseURL: "https://voyageflashcards.firebaseio.com",
-    projectId: "voyageflashcards",
-    storageBucket: "voyageflashcards.appspot.com",
-    messagingSenderId: "902467180091"
-  };
-  var fire = firebase.initializeApp(config);
-//login to firebase
-var email = 'tony@mrbrackins.com';
-var password = 'P@ssword1';
-fire.auth().signInWithEmailAndPassword(email, password)
-  .then(function(user) {
-    console.log(user)
-
-  })
-
-var currentUser = fire.auth().currentUser;
+import firebase from 'firebase'
+import _ from 'lodash';
 
 
-
+var email = "tony@mrbrackins.com";
+var password = "P@ssword1";
 const data = [
   {
   title: 'Flashcard 1',
@@ -51,7 +32,11 @@ class flashcardContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: ''
+      currentUser: false,
+      data: [{
+        title: 'title',
+        desc: 'desc'
+      }]
 
       };
 
@@ -61,24 +46,73 @@ class flashcardContainer extends Component {
   componentWillMount(){
 
     // NEED CURRENT USER HERE BUT ITS SHOWING AS NULL
-    console.log(currentUser)
-    console.log('from component will moutn')
+    firebase.auth().signInWithEmailAndPassword(email, password)
+  .then((user) => {
+    console.log(user)
+    this.setState({currentUser: user})
+    console.log(this.state)
+
+  })
+
   }
 
+  componentDidMount(){
+    console.log('state current user')
+    console.log(this.state.currentUser)
+
+
+    firebase.database().ref(`/users/${this.state.currentUser.uid}/cards`)
+  .once('value', (snapshot) => {
+    var results = snapshot.val();
+    this.setState({data: results})
+  })
+
+  console.log(this.state.data)
+
+  }
+
+  handleClick(e){
+    console.log(this.props)
+  }
+
+
+
+
+
   render() {
-
-
-
-if(currentUser){
-
-  //NEED CURRENT USER HERE TOO BUT SHOWING NUL
-  console.log('current user exists...')
-} else {
-  console.log('current user doe not exists...')
+if(this.state.currentUser){
+  console.log('shit working!')
 }
 
+var thedata = [{
+  title: 'yo',
+  desc: 'desc'
+}]
+
+firebase.database().ref(`/users/${this.state.currentUser.uid}/cards`)
+            .once('value', (snapshot) => {
+                var payload = snapshot.val()
+                console.log(payload)
+
+_.map(payload, (val, uid) => {
+  console.log(val)
+
+  this.setState({
+  data: this.state.data.concat([{ title: val.title, desc: val.desc}])
+})
+
+
+
+
+
+        // return { ...val, uid }; // { shift: 'Monday', name: 'Tony', id: '12321'};
+    })
+    // this.setState({data: thedata})
+
+ }
+            )
     return(
-    data.map(function(item, i){
+    this.state.data.map(function(item, i){
       return (
 
         <div>
@@ -87,6 +121,7 @@ if(currentUser){
         </div>
       );
     })
+
   )
 
   }
